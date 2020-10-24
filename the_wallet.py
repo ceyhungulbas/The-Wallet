@@ -2,37 +2,57 @@ import math
 import requests
 from bs4 import BeautifulSoup
 
-#decimal range without rounding
-def truncate(f, n):
-    return math.floor(f * 10 ** n) / 10 ** n
+hisse_siteleri = [] 
+  
+hisse_sitesi_adedi = int(input("Kaç tane hisseniz var?")) 
 
-r = requests.get("https://kur.doviz.com/serbest-piyasa/amerikan-dolari")
+for i in range(0, hisse_sitesi_adedi): 
+    hisse_siteleri_link = input()  
+    hisse_siteleri.append(hisse_siteleri_link)
+      
+print(hisse_siteleri)
 
-soup = BeautifulSoup(r.text, 'html.parser')
+hisse_siteleri_maliyetleri = []
 
-kurlar = soup.findAll("span", {"class": "value"})
-kurlar = [tag.text for tag in kurlar]
+for i in range (len(hisse_siteleri)):
+    r = requests.get(hisse_siteleri[i])
+    soup = BeautifulSoup(r.text, 'html.parser')
+    h_s_maliyet_temp = soup.findAll("span", {"class": "value"})
+    h_s_maliyet_temp = [tag.text for tag in h_s_maliyet_temp]
+    hisse_siteleri_maliyetleri.append(h_s_maliyet_temp)
+    hisse_siteleri_maliyetleri[i] = [sub.replace("," , ".") for sub in hisse_siteleri_maliyetleri[i]]
+    hisse_siteleri_maliyetleri[i] = list(map(float, hisse_siteleri_maliyetleri[i]))
 
-str_kurlar = []
+print(hisse_siteleri_maliyetleri)
 
-#removing dollar sign
-for element in kurlar:
-    str_kurlar.append(element.strip("$"))
+hisse_siteleri_maliyetleri_advance = [item[0] for item in hisse_siteleri_maliyetleri]
 
-#1.108 = 1108
-int_kurlar = [sub.replace('.', '') for sub in str_kurlar]
-
-#8,93 = 8.93
-float_kurlar = [sub.replace(',' , '.') for sub in int_kurlar]
-
-#str to float
-float_kurlar = list(map(float, float_kurlar))
+print(hisse_siteleri_maliyetleri_advance)
 
 
-print('Kaç dolarınız var?')
-dolar = int(input())
-toplam = (dolar * (float_kurlar[1]))
-print("Dolar Kuru:", float_kurlar[1], "₺")
-print("Bakiyeniz:", truncate(toplam, 2), "₺")
+lot_adedi = []
+maliyet = []
+kar_zarar = []
 
-input("Sonlandırın.")
+for i in range (len(hisse_siteleri)):
+    lot_adedi_temp = int(input("Lot adedini girin:"))
+    lot_adedi.append(lot_adedi_temp)
+
+print(lot_adedi)
+
+for i in range (len(hisse_siteleri)):
+    maliyet_temp = int(input("Maliyetleri girin:"))
+    maliyet.append(maliyet_temp)
+
+print(maliyet)
+
+for i in range (len(hisse_siteleri)):
+    kar_zarar_temp = (lot_adedi[i] * hisse_siteleri_maliyetleri_advance[i]) - (lot_adedi[i] * maliyet[i])
+    kar_zarar_temp = round(kar_zarar_temp, 2)
+    kar_zarar.append(kar_zarar_temp)
+
+print(kar_zarar)
+
+# hisse linkleri:
+# http://bigpara.hurriyet.com.tr/borsa/hisse-fiyatlari/sngyo-sinpas-gmyo-detay/
+# http://bigpara.hurriyet.com.tr/borsa/hisse-fiyatlari/vakfn-vakif-fin-kir-detay/

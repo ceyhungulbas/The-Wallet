@@ -74,6 +74,8 @@ for i in range(len(hisse_siteleri)):
     print("Maliyetiniz \n", hisse_adlari[i], ":", maliyet[i])
     print("\nKar/Zarar Durumunuz \n", hisse_adlari[i], ":", kar_zarar[i], "\n")
 
+input("Sonlandırmak Boşluk tuşuna basın.")
+
 # hisse linkleri:
 # http://bigpara.hurriyet.com.tr/borsa/hisse-fiyatlari/sngyo-sinpas-gmyo-detay/
 # http://bigpara.hurriyet.com.tr/borsa/hisse-fiyatlari/vakfn-vakif-fin-kir-detay/
